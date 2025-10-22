@@ -1,7 +1,7 @@
 <div>
-    <img src="equation/usa-1.jpg" width="30%"> <img src="equation/usa-4.jpg" width="30%"> 
-    <img src="equation/usa-2.jpg" width="30%"> <img src="equation/usa-5.jpg" width="30%"> 
-    <img src="equation/usa-3.jpg" width="30%"> <img src="equation/usa-6.jpg" width="30%">
+    <img src="equation/usa-1.jpg" width="35%"> <img src="equation/usa-4.jpg" width="35%"> 
+    <img src="equation/usa-2.jpg" width="35%"> <img src="equation/usa-5.jpg" width="35%"> 
+    <img src="equation/usa-3.jpg" width="35%"> <img src="equation/usa-6.jpg" width="35%">
 </div>
 
 ```py
