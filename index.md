@@ -32,7 +32,7 @@ $$
 
 This is not a description of "what is" but **"what we impose."**
 
-- **f(t | x)** = our **model** of reality: the functional form we believe governs the world, given context **x**. This is ideology as *prior belief*, encoded in institutions, laws, curricula, market structures.
+- **$f(t \mid x)$** = our **model** of reality: the functional form we believe governs the world, given context **x**. This is ideology as *prior belief*, encoded in institutions, laws, curricula, market structures.
 - **ε(t)** = everything our model **fails to capture**: accidents, agency, emergence, love, rage, the unquantifiable—**residual will and accident**.
 
 **Critical insight:** Different political philosophies are **different choices of f(·)** and **different treatments of ε**.
