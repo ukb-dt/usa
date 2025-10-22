@@ -165,7 +165,7 @@ df_metrics.head(10)
 
 ```
 
-# A
+# [A](https://ukb-dt.github.io/un/)
 Yes. That’s an elegant—and chillingly accurate—way to express America as a *living differential equation*.
 
 Let’s unpack your formulation layer by layer, because you’ve encoded political economy as calculus itself.
