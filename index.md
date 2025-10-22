@@ -1,4 +1,5 @@
 # Prelude: On Context, Will, and [Drift](https://ukb-dt.github.io/un/)
+
 ## A Critique of Political Differential Equations
 
 ---
@@ -23,7 +24,7 @@ Context **x** is not fixed terrain but a **structured field of conditioning vari
 
 ---
 
-### II. The Model: y = f(t\ | x) + ε — Where Will Enters
+### II. The Model: y = f(t | x) + ε — Where Will Enters
 
 $$
 y(t) = f(t \mid \mathbf{x}) + \varepsilon(t)
@@ -40,16 +41,16 @@ This is not a description of "what is" but **"what we impose."**
 
 ### III. Conservative vs. Liberal as Functional Priors
 
-| Dimension | Conservative f(·) | Liberal f(·) |
-|-----------|------------------|--------------|
-| **Form** | Simple, low-dimensional: "natural order," tradition, equilibrium | Complex, adaptive: "progress," reform, learning |
-| **Belief about ε** | ε is **noise to be suppressed** (dangerous, destabilizing) | ε is **signal to be integrated** (innovation, justice claims) |
-| **Time horizon** | Short memory: f(t\|x) anchored to x₀ (founding values, "original intent") | Long memory: f(t\|x) updates as ε accumulates (living constitution) |
-| **Causal stance** | x determines y (context is destiny; free will constrained) | y can reshape x (agency, policy can alter structure) |
+| Dimension       | Conservative f(·)                                                                 | Liberal f(·)                                                                 |
+|-----------------|-----------------------------------------------------------------------------------|------------------------------------------------------------------------------|
+| **Form**        | Simple, low-dimensional: "natural order," tradition, equilibrium                  | Complex, adaptive: "progress," reform, learning                              |
+| **Belief about ε** | ε is **noise to be suppressed** (dangerous, destabilizing)                        | ε is **signal to be integrated** (innovation, justice claims)                |
+| **Time horizon**| Short memory: $f(t \mid x)$ anchored to $x_0$ (founding values, "original intent") | Long memory: $f(t \mid x)$ updates as ε accumulates (living constitution)   |
+| **Causal stance**| x determines y (context is destiny; free will constrained)                       | y can reshape x (agency, policy can alter structure)                         |
 
 **In differential terms:**
 
-- **Conservative regime:** High damping (c), high stiffness (k). Treats ε as *white noise*—mean zero, no memory. Minimizes ∫ε dt.
+- **Conservative regime:** High damping (c), high stiffness (k). Treats ε as *white noise*—mean zero, no memory. Minimizes $\int \varepsilon \, dt$.
 - **Liberal regime:** Low damping, low stiffness. Treats ε as *structured signal* with autocorrelation—persistent shocks that should update the model f(·) itself.
 
 ---
@@ -66,9 +67,9 @@ where:
 - **εT** = linear drift (systematic bias in our model, cumulative error)
 - **C** = integration constant (initial conditions, historical contingency—*soil*)
 
-**The problem:** If ε has structure (autocorrelation, long memory), then our model f(t\ |x) becomes **increasingly wrong** unless we **update it**.
+**The problem:** If ε has structure (autocorrelation, long memory), then our model $f(t \mid x)$ becomes **increasingly wrong** unless we **update it**.
 
-- **Conservatives resist updating f(·):** They treat drift as *moral hazard*—to acknowledge ε as signal is to abandon fixed principles. Result: growing gap between model and reality, rising \|ε \|, eventual rupture.
+- **Conservatives resist updating f(·):** They treat drift as *moral hazard*—to acknowledge ε as signal is to abandon fixed principles. Result: growing gap between model and reality, rising $\|\varepsilon\|$, eventual rupture.
 - **Liberals over-update f(·):** They risk **model collapse**—if every ε is treated as signal, f(·) becomes unmoored from any stable x, leading to directionless drift or ideological fashion.
 
 **Both fail** when they don't distinguish:
@@ -94,7 +95,7 @@ where $\mathcal{C}$ is the **feasible set** of velocities—the grammar of legal
 
 This constraint set is **context-dependent** (x) and **time-varying** (interpreted differently across eras). Amendments don't "integrate branches"; they **expand or contract C**, the constraint set itself.
 
-**Critical point:** If f(t|x) + ε generates velocities *outside* C, you get constitutional crisis—either:
+**Critical point:** If $f(t \mid x) + \varepsilon$ generates velocities *outside* C, you get constitutional crisis—either:
 1. **Crisis resolved by amendment** (C expands to admit the new dy/dt)
 2. **Crisis resolved by revolution** (y jumps discontinuously, outside the differential framework)
 3. **Crisis suppressed** (enforcement of C despite ε pressure—leads to explosive acceleration later)
@@ -200,7 +201,7 @@ This makes the **grammar adaptive**, the **context endogenous**, and the **resid
 
 Or more starkly:
 
-> **Is there a learning rate η such that the integrated drift ∫ε dt never exceeds the system's capacity to absorb it into updated grammar—or does every civilization eventually face ε-driven collapse/rupture/transformation?**
+> **Is there a learning rate η such that the integrated drift $\int \varepsilon \, dt$ never exceeds the system's capacity to absorb it into updated grammar—or does every civilization eventually face ε-driven collapse/rupture/transformation?**
 
 That's the question a critique must center. The oscillator is a parable. The real dynamics are **adaptive, nonlinear, and self-referential**—not just a spring-mass-damper but a **learning system trying to stay alive in an environment it partially creates.**
 
@@ -208,7 +209,7 @@ That's the question a critique must center. The oscillator is a parable. The rea
 
 **Next step:** Build the adaptive SDE above, simulate it with parameter learning, and show the *phase transition* where a polity either:
 1. **Learns** (updates θ, absorbs ε into new stable f)
-2. **Rigidifies** (refuses to update θ, \|ε \| explodes, rupture)
+2. **Rigidifies** (refuses to update θ, $\|\varepsilon\|$ explodes, rupture)
 3. **Dissolves** (over-updates θ, loses coherent identity, drifts into noise)
 
 That would be the full model. This prelude names its necessity.
@@ -221,11 +222,11 @@ This is a **critical prelude** that fundamentally reframes the analysis. The key
 
 1. **Context as matrix, not coordinate**: (x, y) should be **(context matrix x, outcome metric y)** where x ∈ ℝⁿˣᵖ contains all conditioning variables—demography, capital, institutions, memory.
 
-2. **f(t\ |x) as imposed will**: The function is not "reality" but our **ideological prior**—what we believe governs the world. Conservatives and liberals choose *different functional forms* and treat ε differently.
+2. **f(t | x) as imposed will**: The function is not "reality" but our **ideological prior**—what we believe governs the world. Conservatives and liberals choose *different functional forms* and treat ε differently.
 
 3. **ε as endogenous feedback**: The residual isn't external noise—it's **generated by the system itself** and feeds back. Today's unmodeled shocks become tomorrow's context, creating fractal cycles.
 
-4. **Drift as ideological accumulation**: ∫ε dt represents the compound error from our model being wrong. Conservatives resist updating (growing gap), liberals over-update (model collapse).
+4. **Drift as ideological accumulation**: $\int \varepsilon \, dt$ represents the compound error from our model being wrong. Conservatives resist updating (growing gap), liberals over-update (model collapse).
 
 5. **The learning problem**: The deepest question is whether a polity can **learn fast enough** (update f and x as ε accumulates) without losing its identity (constraint set C).
 
@@ -238,7 +239,6 @@ This is a **critical prelude** that fundamentally reframes the analysis. The key
 - Multiscale coupling (news cycle × generational time)
 
 The prelude ends by proposing a **stochastic differential equation with adaptive dynamics**—a learning system that can either absorb drift, rigidify and rupture, or dissolve into incoherence.
-
 
 {% raw %}
 <!-- Drop this anywhere in your README.md or page HTML -->
