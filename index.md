@@ -1,115 +1,89 @@
 <div>
-    <img src="equation/usa-1.jpg" width="35%"> <img src="equation/usa-4.jpg" width="35%"> 
-    <img src="equation/usa-2.jpg" width="35%"> <img src="equation/usa-5.jpg" width="35%"> 
-    <img src="equation/usa-3.jpg" width="35%"> <img src="equation/usa-6.jpg" width="35%">
+    <img src="equation/usa.jpg" width="75%"> 
 </div>
 
 ```py
-# Simulate the toy damped, forced oscillator for two regimes ("conservative" vs "liberal")
-# and compute diagnostics treating dy/dt as "compression".
-# We'll produce time-series plots (y, dy/dt) and phase portrait for each regime,
-# and a summary table of diagnostics.
+
+# Updated script: 3x2 grid where every panel shares the TIME x-axis,
+# and each row shares a common y-axis variable: row1 -> y(t), row2 -> y'(t), row3 -> y''(t).
+# No explicit colors set (use matplotlib defaults). Diagnostics table displayed at the end.
+
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-from math import exp
 
-# Simulation parameters
+# --- Simulation parameters ---
 T = 200.0
 dt = 0.1
-t = np.arange(0, T+dt, dt)
+t = np.arange(0, T + dt, dt)
 n = len(t)
 
-# Forcing: institutional pulses (Gaussian bumps) + low-frequency seasonal forcing
+# --- Forcing: pulses + slow institutional beat ---
 pulse_times = np.array([20, 60, 100, 140])
 pulse_width = 3.0
 F_base = np.zeros_like(t)
 for pt in pulse_times:
-    F_base += np.exp(-0.5 * ((t - pt)/pulse_width)**2) * 5.0  # pulses of amplitude ~5
-F_base += 0.5 * np.sin(2 * np.pi * t / 80.0)  # slow seasonal institutional beat
+    F_base += np.exp(-0.5 * ((t - pt) / pulse_width) ** 2) * 5.0
+F_base += 0.5 * np.sin(2 * np.pi * t / 80.0)
 
-# Structured noise epsilon: AR(1) to create memory (compounded epsilon)
+# --- Structured noise: AR(1) for memory ---
 np.random.seed(42)
 eps = np.zeros_like(t)
-phi = 0.96  # strong memory -> structured rhythm
+phi = 0.96
 sigma = 0.5
 for i in range(1, n):
-    eps[i] = phi * eps[i-1] + sigma * np.random.randn()
+    eps[i] = phi * eps[i - 1] + sigma * np.random.randn()
 
 F = F_base + eps
-
-# Equilibrium y0 determined by 'grammar' x; keep y0 = 0 for simplicity
 y0 = 0.0
 
-# Regimes
+# --- Regimes: Conservative vs Liberal ---
 regimes = {
-    "Conservative (high damping, stiff grammar)": {"m": 1.0, "c": 8.0, "k": 20.0},
-    "Liberal (low damping, flexible grammar)": {"m": 1.0, "c": 1.0, "k": 5.0},
+    "Conservative": {"m": 1.0, "c": 8.0, "k": 20.0},
+    "Liberal": {"m": 1.0, "c": 1.0, "k": 5.0},
 }
 
-results = {}
-metrics = []
-
-# Integrator: simple RK4 for second-order ODE written as first-order system
 def simulate(m, c, k, F, t, dt, y0=0.0):
+    """RK4 integrator for m y'' + c y' + k(y-y0) = F(t)"""
     n = len(t)
     y = np.zeros(n)
     v = np.zeros(n)  # v = dy/dt
-    # initial conditions small perturbation
     y[0] = 0.1
     v[0] = 0.0
-
-    def accel(y, v, tt_idx):
-        # m * y'' = - c v - k(y - y0) + F(t)
-        return (-c * v - k * (y - y0) + F[tt_idx]) / m
-
-    for i in range(n-1):
-        # RK4 steps
+    def accel(y_val, v_val, idx):
+        return (-c * v_val - k * (y_val - y0) + F[idx]) / m
+    for i in range(n - 1):
         yi, vi = y[i], v[i]
         ai = accel(yi, vi, i)
-
-        # k1
-        k1y = vi
-        k1v = ai
-
-        # k2
+        # RK4
+        k1y, k1v = vi, ai
         y_temp = yi + 0.5 * dt * k1y
         v_temp = vi + 0.5 * dt * k1v
-        k2y = v_temp
-        k2v = accel(y_temp, v_temp, i)
-
-        # k3
+        k2y, k2v = v_temp, accel(y_temp, v_temp, i)
         y_temp = yi + 0.5 * dt * k2y
         v_temp = vi + 0.5 * dt * k2v
-        k3y = v_temp
-        k3v = accel(y_temp, v_temp, i)
-
-        # k4
+        k3y, k3v = v_temp, accel(y_temp, v_temp, i)
         y_temp = yi + dt * k3y
         v_temp = vi + dt * k3v
-        k4y = v_temp
-        k4v = accel(y_temp, v_temp, i)
-
-        y[i+1] = yi + (dt/6.0) * (k1y + 2*k2y + 2*k3y + k4y)
-        v[i+1] = vi + (dt/6.0) * (k1v + 2*k2v + 2*k3v + k4v)
-
-    # compute acceleration (d2y/dt2) by finite differences of v
+        k4y, k4v = v_temp, accel(y_temp, v_temp, i)
+        y[i + 1] = yi + (dt / 6.0) * (k1y + 2 * k2y + 2 * k3y + k4y)
+        v[i + 1] = vi + (dt / 6.0) * (k1v + 2 * k2v + 2 * k3v + k4v)
     a = np.gradient(v, dt)
     return y, v, a
 
+# --- Run simulations and compute diagnostics ---
+results = {}
+metrics = []
 for name, params in regimes.items():
     y, v, a = simulate(params["m"], params["c"], params["k"], F, t, dt, y0=y0)
     results[name] = {"t": t, "y": y, "v": v, "a": a, "params": params}
-
-    # Diagnostics treating dy/dt as compression
     mean_abs_v = np.mean(np.abs(v))
     std_v = np.std(v)
     peak_abs_a = np.max(np.abs(a))
-    # Spectral analysis for dominant frequency of y
     yf = np.fft.rfft(y - np.mean(y))
     freqs = np.fft.rfftfreq(n, dt)
-    power = np.abs(yf)**2
-    dominant_freq = freqs[np.argmax(power[1:])+1]  # ignore zero-frequency
+    power = np.abs(yf) ** 2
+    dominant_freq = freqs[np.argmax(power[1:]) + 1]
     metrics.append({
         "Regime": name,
         "m": params["m"],
@@ -121,47 +95,73 @@ for name, params in regimes.items():
         "dominant_freq (Hz)": dominant_freq,
     })
 
-# Create a summary dataframe
 df_metrics = pd.DataFrame(metrics).set_index("Regime")
 
-# Display plots: for each regime, create three separate plots (y(t), dy/dt(t), phase portrait)
-for name, data in results.items():
+# --- Shared y-axis limits per row (y, y', y'') ---
+y_all = np.hstack([results[r]["y"] for r in results])
+v_all = np.hstack([results[r]["v"] for r in results])
+a_all = np.hstack([results[r]["a"] for r in results])
+
+def limits(arr, margin_frac=0.08):
+    mn, mx = np.min(arr), np.max(arr)
+    if mx - mn < 1e-6:
+        return (mn - 0.5, mx + 0.5)
+    m = margin_frac * (mx - mn)
+    return (mn - m, mx + m)
+
+y_limits = limits(y_all)
+v_limits = limits(v_all)
+a_limits = limits(a_all)
+
+# --- Create figure: share x-axis (time) across all panels ---
+fig, axes = plt.subplots(3, 2, figsize=(14, 10), sharex=True)
+col_names = list(regimes.keys())
+row_titles = ["y(t) — state", "y'(t) — compression", "y''(t) — rhythm (acceleration)"]
+
+for col_idx, regime_name in enumerate(col_names):
+    data = results[regime_name]
     t = data["t"]
     y = data["y"]
     v = data["v"]
+    a = data["a"]
 
-    plt.figure(figsize=(10, 3.5))
-    plt.plot(t, y)
-    plt.title(f"{name} — y(t) (realized state)")
-    plt.xlabel("Time")
-    plt.ylabel("y(t)")
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    # Row 0: y(t)
+    ax = axes[0, col_idx]
+    ax.plot(t, y, linewidth=1)
+    ax.set_ylim(y_limits)
+    if col_idx == 0:
+        ax.set_ylabel(row_titles[0])
+    ax.set_title(regime_name)
+    ax.grid(True)
 
-    plt.figure(figsize=(10, 3.5))
-    plt.plot(t, v)
-    plt.title(f"{name} — dy/dt (interpreted as COMPRESSION)")
-    plt.xlabel("Time")
-    plt.ylabel("dy/dt")
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    # Row 1: y'(t)
+    ax = axes[1, col_idx]
+    ax.plot(t, v, linewidth=1)
+    ax.set_ylim(v_limits)
+    if col_idx == 0:
+        ax.set_ylabel(row_titles[1])
+    ax.grid(True)
 
-    plt.figure(figsize=(6, 6))
-    plt.plot(y, v)
-    plt.title(f"{name} — Phase portrait (y vs dy/dt)")
-    plt.xlabel("y")
-    plt.ylabel("dy/dt")
-    plt.grid(True)
-    plt.tight_layout()
-    plt.show()
+    # Row 2: y''(t)
+    ax = axes[2, col_idx]
+    ax.plot(t, a, linewidth=1)
+    ax.set_ylim(a_limits)
+    if col_idx == 0:
+        ax.set_ylabel(row_titles[2])
+    ax.set_xlabel("Time (t) — prosody")
+    ax.grid(True)
 
-# Present metrics in a table for the user to inspect
-import caas_jupyter_tools as tools; tools.display_dataframe_to_user("Regime diagnostics (compression vs rhythm)", df_metrics)
+plt.suptitle("Dynamics: Columns = regimes; Rows = y, y', y'' (all panels share Time x-axis)", fontsize=14)
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+plt.show()
 
-# Also print the dataframe to the notebook output for visibility
+# Display diagnostics table to the user
+import caas_jupyter_tools as tools
+tools.display_dataframe_to_user("Regime diagnostics (compression vs rhythm)", df_metrics)
+
+# Also show the dataframe inline
 df_metrics.head(10)
+
 
 ```
 
